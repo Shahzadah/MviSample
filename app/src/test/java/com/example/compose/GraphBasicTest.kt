@@ -18,7 +18,7 @@ class GraphBasicTest {
             addEdge(2, 3)
             addEdge(2, 4)
         }
-        println("Total path - " + graph.isPathAvailable(0, 4))
+//        println("Total path - " + graph.isPathAvailable(0, 4))
 //        graph.waterJugProblem(jug1Limit = 3, jug2Limit = 4, target = 2).let {
 //            println("Waterjug possible - $it")
 //        }

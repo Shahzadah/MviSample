@@ -325,9 +325,7 @@ class DirectedGraph(private val totalVertex: Int) {
         return pathCount
     }
 
-    fun getPathCount(source: Int, dest: Int, kEdges: Int): Int {
 
-    }
 }
 
 

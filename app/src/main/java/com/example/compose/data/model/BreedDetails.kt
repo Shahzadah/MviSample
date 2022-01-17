@@ -42,5 +42,4 @@ class BreedDetailsProvider : PreviewParameterProvider<BreedDetails> {
             temperament = "Stubborn, Curious, Playful, Adventurous, Active, Fun-loving"
         )
     )
-    override val count: Int = values.count()
 }

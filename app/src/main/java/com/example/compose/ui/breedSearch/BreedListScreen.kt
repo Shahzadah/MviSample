@@ -12,10 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,7 +20,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.compose.data.model.BreedDetails
 import com.example.compose.ui.breedSearch.mvi.BreedListEffect
 import com.example.compose.ui.breedSearch.mvi.BreedListIntent
-import com.example.compose.ui.breedSearch.mvi.BreedListState
 import com.example.core_mvi.MviComposable
 
 @Composable
@@ -40,7 +35,7 @@ fun BreedListScreen(launchBreedDetails: (breed: BreedDetails) -> Unit) {
             }
         }
     ) { state, sendIntent ->
-        if (state.current == BreedListState.Loading) {
+        if (state.loading) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -50,15 +45,14 @@ fun BreedListScreen(launchBreedDetails: (breed: BreedDetails) -> Unit) {
                 CircularProgressIndicator()
             }
         }
-        if (state.current is BreedListState.Information) {
-            var breedName by rememberSaveable { mutableStateOf("") }
+        state.filteredListBreeds?.let { filteredList ->
             Column {
-                SearchView(breedName) {
-                    breedName = it
+                SearchView(state.searchText) {
+                    sendIntent(BreedListIntent.SearchTextChanged(it))
                 }
                 Divider()
-                BreedList(state.current.listBreeds, breedName) {
-                    sendIntent.invoke(BreedListIntent.BreedsListItemClicked(it))
+                BreedList(filteredList) {
+                    sendIntent(BreedListIntent.BreedsListItemClicked(it))
                 }
             }
         }
@@ -68,25 +62,13 @@ fun BreedListScreen(launchBreedDetails: (breed: BreedDetails) -> Unit) {
 @Composable
 fun BreedList(
     listBreedDetails: List<BreedDetails>,
-    searchText: String,
     launchBreedDetails: (breed: BreedDetails) -> Unit
 ) {
-    val filteredList = if (searchText.isEmpty()) {
-        listBreedDetails
-    } else {
-        val tempList = ArrayList<BreedDetails>()
-        listBreedDetails.forEach {
-            if (it.name.contains(searchText, ignoreCase = true)) {
-                tempList.add(it)
-            }
-        }
-        tempList
-    }
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items(filteredList) { breedItem ->
+        items(listBreedDetails) { breedItem ->
             BreedListItem(breedItem) {
                 launchBreedDetails(breedItem)
             }

@@ -21,6 +21,9 @@ fun <S : MviState, I : MviIntent, E : MviEffect> MviComposable(
         }
     }
 
+    val sendIntent: (I) -> Unit = { intent: I ->
+        viewModel.postIntent(intent)
+    }
     val uiState = viewModel.state.collectAsState().value
-    content.invoke(uiState, viewModel::postIntent)
+    content.invoke(uiState, sendIntent)
 }

@@ -5,4 +5,5 @@ import com.example.core_mvi.MviIntent
 
 sealed class BreedListIntent : MviIntent {
     data class BreedsListItemClicked(val breedDetails: BreedDetails) : BreedListIntent()
+    data class SearchTextChanged(val searchText: String) : BreedListIntent()
 }

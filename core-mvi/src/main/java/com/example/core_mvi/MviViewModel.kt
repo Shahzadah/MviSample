@@ -1,4 +1,4 @@
-package com.example.compose.utils
+package com.example.core_mvi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

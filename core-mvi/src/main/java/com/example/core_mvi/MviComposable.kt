@@ -1,4 +1,4 @@
-package com.example.compose.utils
+package com.example.core_mvi
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable

@@ -1,5 +1,6 @@
 package com.example.compose.ui.breedSearch
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,24 +18,25 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.compose.data.model.BreedDetails
 import com.example.compose.ui.breedSearch.mvi.BreedListEffect
 import com.example.compose.ui.breedSearch.mvi.BreedListIntent
 import com.example.compose.ui.breedSearch.mvi.BreedListState
-import com.example.compose.utils.MviComposable
+import com.example.core_mvi.MviComposable
 
 @Composable
-fun BreedListScreen(
-    viewModel: BreedListViewModel = hiltViewModel(),
-    launchBreedDetails: (breed: BreedDetails) -> Unit
-) {
+fun BreedListScreen(launchBreedDetails: (breed: BreedDetails) -> Unit) {
+    val context = LocalContext.current
     MviComposable(
-        viewModel = viewModel,
+        viewModel = hiltViewModel<BreedListViewModel>(),
         emitEffect = {
             when (it) {
                 is BreedListEffect.LaunchBreedDetailsScreen -> launchBreedDetails.invoke(it.breedDetails)
+                is BreedListEffect.ShowError -> Toast.makeText(context, it.error, Toast.LENGTH_LONG)
+                    .show()
             }
         }
     ) { state, sendIntent ->

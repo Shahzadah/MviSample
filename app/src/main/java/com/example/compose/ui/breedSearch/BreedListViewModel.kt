@@ -7,7 +7,7 @@ import com.example.compose.ui.breedSearch.mvi.BreedListEffect
 import com.example.compose.ui.breedSearch.mvi.BreedListIntent
 import com.example.compose.ui.breedSearch.mvi.BreedListState
 import com.example.compose.ui.breedSearch.mvi.BreedListStateWrapper
-import com.example.compose.utils.MviViewModel
+import com.example.core_mvi.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,7 +38,7 @@ class BreedListViewModel @Inject constructor(private val repository: BreedSearch
                 reduceState { copy(current = BreedListState.Information(results.response)) }
             }
             is Results.Error -> {
-                reduceState { copy(current = BreedListState.Error(results.throwable)) }
+                postEffect(BreedListEffect.ShowError(results.throwable.message!!))
             }
         }
     }

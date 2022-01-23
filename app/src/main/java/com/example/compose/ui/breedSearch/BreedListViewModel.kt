@@ -3,7 +3,7 @@ package com.example.compose.ui.breedSearch
 import androidx.lifecycle.viewModelScope
 import com.example.compose.data.model.BreedDetails
 import com.example.compose.data.model.Results
-import com.example.compose.data.repository.BreedSearchRepository
+import com.example.compose.ui.breedSearch.domain.FetchBreedListUseCase
 import com.example.compose.ui.breedSearch.mvi.BreedListEffect
 import com.example.compose.ui.breedSearch.mvi.BreedListIntent
 import com.example.compose.ui.breedSearch.mvi.BreedListState
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BreedListViewModel @Inject constructor(private val repository: BreedSearchRepository) :
+class BreedListViewModel @Inject constructor(private val fetchBreedListUseCase: FetchBreedListUseCase) :
     MviViewModel<BreedListState, BreedListIntent, BreedListEffect>() {
 
     override val defaultState: BreedListState = BreedListState(loading = true)
@@ -41,13 +41,18 @@ class BreedListViewModel @Inject constructor(private val repository: BreedSearch
                     }
                     tempList
                 }
-                reduceState { copy(filteredListBreeds = filteredList) }
+                reduceState {
+                    copy(
+                        filteredListBreeds = filteredList,
+                        searchText = intent.searchText
+                    )
+                }
             }
         }
     }
 
     private suspend fun callBreedListApi() {
-        when (val results = repository.fetchBreedsList()) {
+        when (val results = fetchBreedListUseCase.invoke()) {
             is Results.Success -> {
                 reduceState {
                     copy(
@@ -58,7 +63,7 @@ class BreedListViewModel @Inject constructor(private val repository: BreedSearch
                 }
             }
             is Results.Error -> {
-                postEffect(BreedListEffect.ShowError(results.throwable.message!!))
+                postEffect(BreedListEffect.ShowError(results.message))
             }
         }
     }

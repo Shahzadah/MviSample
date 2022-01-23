@@ -16,18 +16,18 @@ abstract class MviViewModel<S : MviState, I : MviIntent, E : MviEffect> : ViewMo
 
     private val intents: Channel<I> = Channel(Channel.UNLIMITED)
 
-    abstract val defaultState: S
-
     private val _state by lazy { MutableStateFlow(defaultState) }
     val state: StateFlow<S> by lazy { _state }
-
-    init {
-        subscribeToIntents()
-    }
 
     private val effects: Channel<E> =
         Channel(EFFECTS_BUFFER_SIZE, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     private var collected = false
+
+    abstract val defaultState: S
+
+    init {
+        subscribeToIntents()
+    }
 
     abstract fun receiveIntent(intent: I)
 

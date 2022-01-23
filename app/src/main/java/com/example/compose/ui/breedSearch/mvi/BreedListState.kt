@@ -7,5 +7,5 @@ data class BreedListState(
     var loading: Boolean,
     var searchText: String = "",
     var listBreeds: List<BreedDetails>? = null,
-    var filteredListBreeds: List<BreedDetails>? = null
+    var filteredListBreeds: List<BreedDetails>? = null,
 ) : MviState

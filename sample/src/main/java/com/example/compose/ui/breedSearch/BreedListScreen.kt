@@ -15,9 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.compose.data.model.BreedDetails
+import com.example.compose.data.model.BreedDetailsProvider
+import com.example.compose.data.model.Image
 import com.example.compose.ui.breedSearch.mvi.BreedListEffect
 import com.example.compose.ui.breedSearch.mvi.BreedListIntent
 import com.example.core_mvi.MviComposable
@@ -73,5 +77,14 @@ fun BreedList(
                 launchBreedDetails(breedItem)
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewBreedList(@PreviewParameter(BreedDetailsProvider::class) breedItem: BreedDetails) {
+    breedItem.image = Image(url = "")
+    BreedList(listOf(breedItem, breedItem, breedItem, breedItem)) {
+
     }
 }

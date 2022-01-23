@@ -3,4 +3,6 @@
     <string name="search_dog_breeds">Search dog breeds</string>
     <string name="breed_details">Breed details</string>
     <string name="back">Back</string>
+    <string name="placeholder_breed_name_search">Search by breed name</string>
+    <string name="average_lifespan">%1$s average lifespan</string>
 </resources>

@@ -11,16 +11,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.example.compose.R
 import com.example.compose.data.model.BreedDetails
 import com.example.compose.data.model.BreedDetailsProvider
 
@@ -31,7 +34,7 @@ fun BreedListItem(breedItem: BreedDetails, clickCallback: () -> Unit = {}) {
             .fillMaxWidth()
             .clickable(onClick = clickCallback),
         elevation = 4.dp,
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(corner = CornerSize(6.dp))
     ) {
         Row(
@@ -49,7 +52,7 @@ fun BreedListItem(breedItem: BreedDetails, clickCallback: () -> Unit = {}) {
             }
             Column() {
                 Text(text = breedItem.name)
-                Text(text = "${breedItem.lifeSpan} average lifespan")
+                Text(text = stringResource(R.string.average_lifespan).format(breedItem.lifeSpan))
             }
         }
     }

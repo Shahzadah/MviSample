@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -28,15 +29,18 @@ fun NavigationGraph() {
             navController = navController,
             startDestination = Screen.BreedList.route
         ) {
-            composable(Screen.BreedList.route) {
+            composable(Screen.BreedList.route) { navBackStack ->
                 toolBar = ToolbarDetails(title = stringResource(id = R.string.search_dog_breeds))
-                BreedListScreen(launchBreedDetails = navigationActions.launchBreedDetails)
+                BreedListScreen(
+                    viewModel = hiltViewModel(navBackStack),
+                    launchBreedDetails = navigationActions.launchBreedDetails
+                )
             }
-            composable(route = Screen.BreedDetails.route.plus("/{BreedDetailsData}")) {
-                it.arguments?.getString("BreedDetailsData")?.let { json ->
+            composable(route = Screen.BreedDetails.route.plus("/{BreedDetailsData}")) { navBackStack ->
+                navBackStack.arguments?.getString("BreedDetailsData")?.let { json ->
                     val breedDetails = Gson().fromJson(json, BreedDetails::class.java)
                     toolBar = ToolbarDetails(title = breedDetails.name, isBackNeeded = true)
-                    BreedDetailsScreen(breedDetails)
+                    BreedDetailsScreen(viewModel = hiltViewModel(navBackStack), breedDetails)
                 }
             }
         }

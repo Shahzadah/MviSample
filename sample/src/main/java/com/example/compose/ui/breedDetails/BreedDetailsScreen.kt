@@ -21,9 +21,22 @@ import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import com.example.compose.data.model.BreedDetails
 import com.example.compose.data.model.BreedDetailsProvider
+import com.example.core_mvi.MviComposable
 
 @Composable
-fun BreedDetailsScreen(breedDetails: BreedDetails) {
+fun BreedDetailsScreen(viewModel: BreedDetailsViewModel, breedDetails: BreedDetails) {
+    MviComposable(
+        viewModel = viewModel,
+        emitEffect = {
+
+        },
+    ) { state, sendIntet ->
+        BreedDetailsScreenUi(breedDetails)
+    }
+}
+
+@Composable
+fun BreedDetailsScreenUi(breedDetails: BreedDetails) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -59,6 +72,6 @@ fun BreedDetailsScreen(breedDetails: BreedDetails) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBreedDetailsScreen(@PreviewParameter(BreedDetailsProvider::class) breedItem: BreedDetails) {
-    BreedDetailsScreen(breedItem)
+fun PreviewBreedDetailsScreenUi(@PreviewParameter(BreedDetailsProvider::class) breedItem: BreedDetails) {
+    BreedDetailsScreenUi(breedItem)
 }

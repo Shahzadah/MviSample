@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.compose.data.model.BreedDetails
 import com.example.compose.data.model.BreedDetailsProvider
 import com.example.compose.data.model.Image
@@ -27,10 +26,13 @@ import com.example.compose.ui.breedSearch.mvi.BreedListIntent
 import com.example.core_mvi.MviComposable
 
 @Composable
-fun BreedListScreen(launchBreedDetails: (breed: BreedDetails) -> Unit) {
+fun BreedListScreen(
+    viewModel: BreedListViewModel,
+    launchBreedDetails: (breed: BreedDetails) -> Unit
+) {
     val context = LocalContext.current
     MviComposable(
-        viewModel = hiltViewModel<BreedListViewModel>(),
+        viewModel = viewModel,
         emitEffect = {
             when (it) {
                 is BreedListEffect.LaunchBreedDetailsScreen -> launchBreedDetails.invoke(it.breedDetails)
@@ -84,7 +86,5 @@ fun BreedList(
 @Composable
 fun PreviewBreedList(@PreviewParameter(BreedDetailsProvider::class) breedItem: BreedDetails) {
     breedItem.image = Image(url = "")
-    BreedList(listOf(breedItem, breedItem, breedItem, breedItem)) {
-
-    }
+    BreedList(listOf(breedItem, breedItem, breedItem, breedItem)) {}
 }

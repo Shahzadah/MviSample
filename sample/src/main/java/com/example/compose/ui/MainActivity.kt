@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ComposeTheme(window= window) {
+            ComposeTheme(window = window) {
                 NavigationGraph()
             }
         }

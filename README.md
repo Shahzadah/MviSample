@@ -1,4 +1,4 @@
-## Dog Breeds
+## MVI Architecture in Jetpack Compose
 A sample application created to use MVI architecture with Jetpack Compose where you can search dog breed to see the details which includes lifespan, temperament, height & weight along with high quality image.
 
 The app follows MVI architecture with repository pattern, Hilt for dependency injection, Jetpack Compose for UI and other jetpack components.

@@ -15,7 +15,7 @@ The app follows MVI architecture with repository pattern, Hilt for dependency in
 
 ## Modules
 There are 2 main modules: app and core-mvi
-- app: Contains sample application for dog breeds
+- sample: Contains sample application for dog breeds
 - core-mvi: Contains core classes for MVI architecture
 
 ## Folder structure of app module

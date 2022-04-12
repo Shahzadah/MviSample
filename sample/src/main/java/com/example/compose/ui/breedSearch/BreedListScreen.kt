@@ -23,6 +23,7 @@ import com.example.compose.data.model.BreedDetailsProvider
 import com.example.compose.data.model.Image
 import com.example.compose.ui.breedSearch.mvi.BreedListEffect
 import com.example.compose.ui.breedSearch.mvi.BreedListIntent
+import com.example.compose.ui.breedSearch.mvi.BreedListState
 import com.example.core_mvi.MviComposable
 
 @Composable
@@ -35,30 +36,32 @@ fun BreedListScreen(
         viewModel = viewModel,
         emitEffect = {
             when (it) {
-                is BreedListEffect.LaunchBreedDetailsScreen -> launchBreedDetails.invoke(it.breedDetails)
+                is BreedListEffect.LaunchBreedDetailsScreen -> launchBreedDetails(it.breedDetails)
                 is BreedListEffect.ShowError -> Toast.makeText(context, it.error, Toast.LENGTH_LONG)
                     .show()
             }
         }
     ) { state, sendIntent ->
-        if (state.loading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-        state.filteredListBreeds?.let { filteredList ->
-            Column {
-                SearchView(state.searchText) {
-                    sendIntent(BreedListIntent.SearchTextChanged(it))
+        when(state) {
+            is BreedListState.BreedListContentState -> {
+                Column {
+                    SearchView(state.searchText) {
+                        sendIntent(BreedListIntent.SearchTextChanged(it))
+                    }
+                    Divider()
+                    BreedList(state.listBreeds) {
+                        sendIntent(BreedListIntent.BreedsListItemClicked(it))
+                    }
                 }
-                Divider()
-                BreedList(filteredList) {
-                    sendIntent(BreedListIntent.BreedsListItemClicked(it))
+            }
+            is BreedListState.BreedListLoadingState -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
                 }
             }
         }

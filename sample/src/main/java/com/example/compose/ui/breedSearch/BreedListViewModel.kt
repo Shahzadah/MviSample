@@ -16,7 +16,9 @@ import javax.inject.Inject
 class BreedListViewModel @Inject constructor(private val fetchBreedListUseCase: FetchBreedListUseCase) :
     MviViewModel<BreedListState, BreedListIntent, BreedListEffect>() {
 
-    override val defaultState: BreedListState = BreedListState(loading = true)
+    private var breedList = listOf<BreedDetails>()
+
+    override val defaultState: BreedListState = BreedListState.BreedListLoadingState
 
     init {
         viewModelScope.launch {
@@ -31,10 +33,10 @@ class BreedListViewModel @Inject constructor(private val fetchBreedListUseCase: 
             }
             is BreedListIntent.SearchTextChanged -> {
                 val filteredList = if (intent.searchText.isEmpty()) {
-                    state.value.listBreeds
+                    breedList
                 } else {
                     val tempList = ArrayList<BreedDetails>()
-                    state.value.listBreeds?.forEach {
+                    breedList.forEach {
                         if (it.name.contains(intent.searchText, ignoreCase = true)) {
                             tempList.add(it)
                         }
@@ -42,10 +44,7 @@ class BreedListViewModel @Inject constructor(private val fetchBreedListUseCase: 
                     tempList
                 }
                 reduceState {
-                    copy(
-                        filteredListBreeds = filteredList,
-                        searchText = intent.searchText
-                    )
+                    BreedListState.BreedListContentState(intent.searchText, filteredList)
                 }
             }
         }
@@ -54,12 +53,9 @@ class BreedListViewModel @Inject constructor(private val fetchBreedListUseCase: 
     private suspend fun callBreedListApi() {
         when (val results = fetchBreedListUseCase.invoke()) {
             is Results.Success -> {
+                breedList = results.response
                 reduceState {
-                    copy(
-                        loading = false,
-                        listBreeds = results.response,
-                        filteredListBreeds = results.response
-                    )
+                    BreedListState.BreedListContentState(listBreeds = breedList)
                 }
             }
             is Results.Error -> {
